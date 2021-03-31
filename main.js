@@ -20,7 +20,12 @@ let animation2
 let plusMinus = ['plus', 'minus']
 let enemyPosition = ['left', 'right', 'top', 'bottom']
 
-
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+    canvas2.width = window.innerWidth
+    canvas2.height = window.innerHeight
+})
 
 let set = new Set()
 ctx.fillRect(x, y, 20, 20)
@@ -71,13 +76,13 @@ let speed = 3;
 let unit = 50;
 
 const startGame = async () => {
-    if (cnt >= 5000 && cnt % 5000 == 0 && cnt < 20001) {
+    if (cnt >= 2500 && cnt % 2500 == 0 && cnt < 12501) {
         speed++
         unit -= 5
         console.log('speed up!')
     }
-    cnt += 10
-    ctx.fillStyle = "red"
+    cnt += 5
+    ctx.fillStyle = "#FF4848"
     await ctx.clearRect(x - 1, y - 1, 22, 22)
     if (left) {
         if (up) {
@@ -147,7 +152,7 @@ const startGame = async () => {
         }
 
         animation2 = requestAnimationFrame(() => {
-            ctx.fillStyle = "blue"
+            ctx.fillStyle = "#368AFF"
             drawEnemy(x2, y2, X_Sum, Y_Sum)
         })
     }
@@ -166,7 +171,7 @@ var animation = requestAnimationFrame(startGame)
 
 
 const drawEnemy = async (x2, y2, X_Sum, Y_Sum) => {
-    ctx.fillStyle = "blue"
+    ctx.fillStyle = "#368AFF"
 
     await ctx.fillRect(x2, y2, 10, 10)
     await ctx.clearRect(x2 - 1, y2 - 1, 12, 12)
@@ -177,8 +182,8 @@ const drawEnemy = async (x2, y2, X_Sum, Y_Sum) => {
         cancelAnimationFrame(animation)
         cancelAnimationFrame(animation2)
         await ctx.clearRect(0, 0, canvas.width, canvas.height)
-
         let long = window.innerHeight > window.innerWidth ? window.innerHeight : window.innerWidth
+
         ctx2.font = `${long / 30}pt Arial`
         ctx2.textAlign = "center"
         ctx2.fillStyle = "black"
