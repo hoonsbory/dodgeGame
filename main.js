@@ -110,12 +110,12 @@ onkeyup = (e) => {
 
 
 let cnt = 0;
-let speed = 3;
+let speed = 2;
 let unit = 50;
 
 const startGame = async () => {
-    if (cnt >= 2500 && cnt % 2500 == 0 && cnt < 12501) {
-        speed++
+    if (cnt >= 1250 && cnt % 1250 == 0 && cnt < 12501) {
+        speed = speed < 7 ? speed+1 : speed
         unit -= 5
         console.log('speed up!')
     }
