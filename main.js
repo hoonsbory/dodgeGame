@@ -1,24 +1,13 @@
 
-let canvas = document.getElementById("canvas")
-let canvas2 = document.getElementById("canvas2")
-let ctx2 = canvas2.getContext('2d')
-let ctx = canvas.getContext('2d')
+import endDraw from './endDraw.js'
+import drawEnemy from './drawEnemy.js'
+
+
 
 canvas.width = window.innerWidth
 canvas.height = window.innerHeight
 canvas2.width = window.innerWidth
 canvas2.height = window.innerHeight
-
-let x = canvas.width / 2;
-let y = canvas.height / 2;
-let left;
-let right;
-let up;
-let down;
-let animation2
-let endCheck = false
-let plusMinus = ['plus', 'minus']
-let enemyPosition = ['left', 'right', 'top', 'bottom']
 
 window.addEventListener('resize', async () => {
     canvas.width = window.innerWidth
@@ -27,19 +16,13 @@ window.addEventListener('resize', async () => {
     canvas2.height = window.innerHeight
     if (endCheck) {
         drawInfo()
-        endDraw()
+        new endDraw(handleMove, handleStart, startGame)
     }
 })
 
-let set = new Set()
-ctx.fillRect(x, y, 20, 20)
 
-
-
-let beforeTouchX
-let beforeTouchY
-canvas2.addEventListener("touchmove", handleMove);
-canvas2.addEventListener("touchstart", handleStart);
+canvas2.addEventListener("touchmove", handleMove, false);
+canvas2.addEventListener("touchstart", handleStart, false);
 
 function handleStart(evt) {
     evt.preventDefault()
@@ -67,6 +50,7 @@ function handleMove(evt) {
         alert(error)
     }
 }
+
 
 onkeydown = (e) => {
     let key = e.keyCode
@@ -109,13 +93,13 @@ onkeyup = (e) => {
 }
 
 
-let cnt = 0;
-let speed = 2;
-let unit = 50;
 
 const startGame = async () => {
-    if (cnt >= 1250 && cnt % 1250 == 0 && cnt < 12501) {
-        speed = speed < 7 ? speed+1 : speed
+    if (cnt >= 1250 && cnt % 1250 == 0 && cnt < 10001) {
+        if (navigator.userAgent.indexOf("Mobile"))
+            speed = speed < 3 ? speed + 1 : speed
+        else
+            speed = speed < 5 ? speed + 1 : speed
         unit -= 5
         console.log('speed up!')
     }
@@ -136,70 +120,11 @@ const startGame = async () => {
     drawInfo()
 }
 
+ctx.fillRect(x, y, 20, 20)
 
-var animation = requestAnimationFrame(startGame)
+animation = requestAnimationFrame(startGame)
 
 
-
-
-const drawEnemy = async (x2, y2, X_Sum, Y_Sum) => {
-    ctx.fillStyle = "#368AFF"
-
-    await ctx.fillRect(x2, y2, 10, 10)
-    await ctx.clearRect(x2 - 1, y2 - 1, 12, 12)
-    x2 += X_Sum
-    y2 += Y_Sum
-    await ctx.fillRect(x2, y2, 10, 10)
-    if ((x + 20 >= x2 && x - 10 <= x2) && (y2 <= y + 20 && y2 >= y - 10)) {
-        if (endCheck) return
-        endCheck = true
-        cancelAnimationFrame(animation2)
-        cancelAnimationFrame(animation)
-        canvas2.removeEventListener('touchmove', handleMove)
-        canvas2.removeEventListener('touchstart', handleStart)
-        endDraw()
-
-    }
-    animation2 = requestAnimationFrame(() => {
-        drawEnemy(x2, y2, X_Sum, Y_Sum)
-    })
-}
-
-const endDraw = async () => {
-    ctx2.font = `60px Arial`
-    ctx2.textAlign = "center"
-    ctx2.fillStyle = "black"
-    await ctx2.fillText("GAMEOVER", canvas.width / 2, canvas.height / 2)
-    ctx2.font = `30px Arial`
-    await ctx2.fillText("다시하기", canvas.width / 2, canvas.height / 2 + 70,)
-    canvas2.onclick = (e) => {
-        let mouseX = e.offsetX
-        let mouseY = e.offsetY
-        if ((mouseX > canvas.width / 2 - 70 && mouseX < canvas.width / 2 + 70) && (mouseY > canvas.height / 2 + 40 && mouseY < canvas.height / 2 + 80)) {
-            canvas2.addEventListener("touchmove", handleMove);
-            canvas2.addEventListener("touchstart", handleStart);
-            cnt = 0
-            speed = 3
-            unit = 50
-            ctx2.clearRect(0, 0, canvas.width, canvas.height)
-            ctx.clearRect(0, 0, canvas.width, canvas.height)
-            x = canvas.width / 2;
-            y = canvas.height / 2;
-            animation = requestAnimationFrame(startGame)
-            canvas2.style.cursor = "unset"
-            canvas2.onmousemove = ''
-        }
-    }
-    canvas2.onmousemove = (e) => {
-        let mouseX = e.offsetX
-        let mouseY = e.offsetY
-        if ((mouseX > canvas.width / 2 - 70 && mouseX < canvas.width / 2 + 70) && (mouseY > canvas.height / 2 + 40 && mouseY < canvas.height / 2 + 80))
-            canvas2.style.cursor = "pointer"
-        else
-            canvas2.style.cursor = "unset"
-
-    }
-}
 
 
 
@@ -268,16 +193,16 @@ const makePositionAndEnemy = () => {
         default:
             break;
     }
-    animation2 = requestAnimationFrame(() => {
+    animation2.push(requestAnimationFrame(() => {
         ctx.fillStyle = "#368AFF"
-        drawEnemy(x2, y2, X_Sum, Y_Sum)
-    })
+        drawEnemy(x2, y2, X_Sum, Y_Sum, animation2.length,handleMove,handleStart,startGame)
+    }))
 }
 
 const drawInfo = () => {
     ctx2.clearRect(0, 0, canvas.width, canvas.height)
     ctx2.font = 'bold 16px Arial'
     ctx2.textAlign = "center"
-    ctx2.fillText(`점수 : ${cnt}`, 100, 50)
+    ctx2.fillText(`점수 : ${cnt}`, 100, 30)
     ctx2.fillText('made by 비트주세요', canvas.width / 2, canvas.height - 15)
 }
