@@ -7,12 +7,18 @@ export default class endDraw {
     }
 
     async draw() {
+        clearInterval(bgInterval)
+        bgInterval = false
+        document.body.style.background = "rgb(255, 202, 236)"
         endCheck = true
         cancelAnimationFrame(animation)
         shieldAni.forEach(i=>{
             cancelAnimationFrame(i)
         })
         speedAni.forEach(i=>{
+            cancelAnimationFrame(i)
+        })
+        slowAni.forEach(i=>{
             cancelAnimationFrame(i)
         })
         canvas2.removeEventListener('touchmove', this.handleMove)
@@ -34,13 +40,21 @@ export default class endDraw {
             canvas2.addEventListener("touchstart", this.handleStart);
             cnt = 0
             speed = 3
-            unit = 50
+            unit = checkMobile ? 100: 50
             mainSpeed = 5
             speedCheck = false
             shieldCheck = false
+            slowCheck = false
             speedTime = 13000
             shieldTime = 13000
+            slowTime = 13000
+            slowAni = []
+            speedAni = []
+            shieldAni = []
+
+
             itemUnit = 0
+            ctx3.clearRect(0, 0, canvas2.width, canvas2.height)
             ctx2.clearRect(0, 0, canvas2.width, canvas2.height)
             ctx.clearRect(0, 0, canvas2.width, canvas2.height)
             x = canvas2.width / 2;
