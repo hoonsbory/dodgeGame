@@ -7,6 +7,16 @@ export default class endDraw {
     }
 
     async draw() {
+        endCheck = true
+        cancelAnimationFrame(animation)
+        shieldAni.forEach(i=>{
+            cancelAnimationFrame(i)
+        })
+        speedAni.forEach(i=>{
+            cancelAnimationFrame(i)
+        })
+        canvas2.removeEventListener('touchmove', this.handleMove)
+        canvas2.removeEventListener('touchstart', this.handleStart)
         ctx2.font = `60px Arial`
         ctx2.textAlign = "center"
         ctx2.fillStyle = "black"
@@ -25,6 +35,12 @@ export default class endDraw {
             cnt = 0
             speed = 3
             unit = 50
+            mainSpeed = 5
+            speedCheck = false
+            shieldCheck = false
+            speedTime = 13000
+            shieldTime = 13000
+            itemUnit = 0
             ctx2.clearRect(0, 0, canvas2.width, canvas2.height)
             ctx.clearRect(0, 0, canvas2.width, canvas2.height)
             x = canvas2.width / 2;

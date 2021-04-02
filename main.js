@@ -2,7 +2,11 @@
 import endDraw from './endDraw.js'
 import moveRed from './moveRed.js'
 import drawInfo from './drawInfo.js'
-import makeEnemy from './makeEnemy.js'
+import randomPos from './randomPos.js'
+import drawEnemy from './drawEnemy.js'
+import drawShield from './drawShield.js'
+import drawSpeed from './drawSpeed.js'
+
 
 canvas.width = window.innerWidth
 canvas.height = window.innerHeight
@@ -91,27 +95,85 @@ onkeyup = (e) => {
 }
 
 const startGame = async () => {
+    if (shieldCheck) shieldTime += 50
+    if (shieldTime > 13000) {
+        shieldTime = 13000;
+        shieldCheck = false
+        await ctx.save();
+        ctx.globalCompositeOperation = 'destination-out';
+        await ctx.beginPath();
+        await ctx.arc(x + 10, y + 10, 64, 0, 2 * Math.PI, false);
+        await ctx.fill();
+        await ctx.restore();
+    }
+
+    if (speedCheck) speedTime += 50
+    if (speedTime > 13000) {
+        speedTime = 13000;
+        speedCheck = false
+        mainSpeed = 5
+    }
+
     if (cnt >= 1250 && cnt % 1250 == 0 && cnt < 10001) {
         if (navigator.userAgent.indexOf("Mobile"))
             speed = speed < 3 ? speed + 1 : speed
         else
             speed = speed < 5 ? speed + 1 : speed
         unit -= 5
-        console.log('speed up!')
     }
     endCheck = false
     cnt += 5
     ctx.fillStyle = "#FF4848"
-    await ctx.clearRect(x - 1, y - 1, 22, 22)
-
-    moveRed()
+    if (shieldCheck) {
+        await ctx.save();
+        ctx.globalCompositeOperation = 'destination-out';
+        await ctx.beginPath();
+        await ctx.arc(x + 10, y + 10, 64, 0, 2 * Math.PI, false);
+        await ctx.fill();
+        await ctx.restore();
+        moveRed()
+        await ctx.beginPath();
+        await ctx.arc(x + 10, y + 10, 60, 0, 2 * Math.PI);
+        ctx.lineWidth = 5;
+        await ctx.stroke();
+    } else {
+        await ctx.clearRect(x - 1, y - 1, 22, 22);
+        moveRed()
+    }
 
     await ctx.fillRect(x, y, 20, 20)
 
 
-    if (cnt % unit == 0) makeEnemy(handleMove,handleStart,startGame)
+    if (cnt % unit == 0) {
+        let pos = new randomPos()
+        animation2.push(requestAnimationFrame(() => {
+            ctx.fillStyle = "#368AFF"
+            drawEnemy(pos.x2, pos.y2, pos.X_Sum, pos.Y_Sum, animation2.length, handleMove, handleStart, startGame)
+        }))
+    }
+
+
 
     animation = requestAnimationFrame(startGame)
+
+    if (cnt % 1000 == 0 && itemUnit < 2) {
+        let pos = new randomPos()
+        itemUnit++
+        ctx.fillStyle = "black"
+        if (pos.y2 >= canvas.height) pos.y2 -= 120
+        if (pos.x2 >= canvas.width) pos.x2 -= 120
+        if (pos.y2 <= 10) pos.y2 += 120
+        if (pos.x2 <= 0) pos.x2 += 120
+        let random = Math.floor(Math.random() * 2 + 1)
+        if (itemRandom[random - 1] == "shield")
+            shieldAni.push(requestAnimationFrame(() => {
+                drawShield(pos.x2, pos.y2, pos.X_Sum, pos.Y_Sum, shieldAni.length)
+            }))
+        else
+            speedAni.push(requestAnimationFrame(() => {
+                drawSpeed(pos.x2, pos.y2, pos.X_Sum, pos.Y_Sum, speedAni.length)
+            }))
+    }
 
     drawInfo()
 }
