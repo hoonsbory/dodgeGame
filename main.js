@@ -185,18 +185,12 @@ const startGame = async () => {
     ctx.fillStyle = "#FF4848"
     await ctx.clearRect(0,0,canvas.width,canvas.height);
     moveRed()
-
     if (shieldCheck) {
-        // await ctx.save();
-        // ctx.globalCompositeOperation = 'destination-out';
-        // await ctx.beginPath();
-        // await ctx.arc(x + 10, y + 10, 80, 0, 2 * Math.PI);
-        // await ctx.fill();
-        // await ctx.restore();
         await ctx.beginPath();
         await ctx.arc(x + 10, y + 10, 60, 0, 2 * Math.PI);
         ctx.lineWidth = 5;
         await ctx.stroke();
+        
     } 
     await ctx.fillRect(x, y, 20, 20)
     drawInfo()
