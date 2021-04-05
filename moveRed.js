@@ -1,4 +1,4 @@
-const moveRed = () => {
+const moveRed = (mainSpeed) => {
     if (left) {
         if (up) {
             if (y <= 0 && x <= 0) return

@@ -1,63 +1,64 @@
-import clearArc from './clearArc.js'
+import randomPos from './randomPos.js'
+import { createAction } from './redux.js'
+import store from './store.js'
 
-
-const drawItem = async (x2, y2, X_Sum, Y_Sum, idx, item, icon) => {
-    clearArc(x2, y2, 21)
-    x2 += X_Sum
-    y2 += Y_Sum
-    await ctx.save();
-    await ctx.beginPath();
-    await ctx.arc(x2, y2, 20, 0, 2 * Math.PI, false);
-    await ctx.closePath()
-    await ctx.clip()
-
-    await ctx.drawImage(icon, x2 - 20, y2 - 20, 40, 40)
-
-    await ctx.beginPath()
-    await ctx.arc(x2 - 20, y2 - 20, 20, 0, Math.PI * 2, true);
-    await ctx.clip();
-    await ctx.closePath();
-    await ctx.restore();
-
-    if (x2 <= 20) X_Sum *= -1
-    else if (x2 >= canvas.width - 20) X_Sum *= -1
-    else if (y2 <= 20) Y_Sum *= -1
-    else if (y2 >= canvas.height - 20) Y_Sum *= -1
-
-    if ((x + 30 >= x2 && x - 20 <= x2) && (y2 <= y + 30 && y2 >= y - 20)) {
-        clearArc(x2, y2, 21)
-        itemUnit--
-        if (item == "shield") {
-            shieldCheck = true
-            shieldTime -= 13000
-            cancelAnimationFrame(shieldAni[idx])
-        }
-        else if (item == "speed") {
-            mainSpeed = 9
-            cancelAnimationFrame(speedAni[idx])
-            speedTime -= 13000
-            speedCheck = true
-        } else {
-            cancelAnimationFrame(slowAni[idx])
-            slowTime -= 13000
-            slowCheck = true
-        }
-
-        return
+export default class drawItem {
+    constructor(ctx, icon) {
+        this.ctx = ctx
+        this.icon = icon
+        this.pos = new randomPos(80)
+        this.type = icon.src.substring(icon.src.lastIndexOf("/") + 1, icon.src.indexOf(".png")) //아이템 타입 
+    }
+    async animate() {
+        await this.drawIcon()
+        this.bound() //벽에 부딪힐 시 바운드
+        this.Crash() //아이템과 캐릭터 충돌(아이템 먹을 시)
     }
 
-    if (item == 'shield')
-        shieldAni[idx] = requestAnimationFrame(() => {
-            drawItem(x2, y2, X_Sum, Y_Sum, idx, item, icon)
-        })
-    else if (item == 'speed')
-        speedAni[idx] = requestAnimationFrame(() => {
-            drawItem(x2, y2, X_Sum, Y_Sum, idx, item, icon)
-        })
-    else
-        slowAni[idx] = requestAnimationFrame(() => {
-            drawItem(x2, y2, X_Sum, Y_Sum, idx, item, icon)
-        })
-}
+    // async clearArc(x, y, size) {
+    //     await this.ctx.save();
+    //     this.ctx.globalCompositeOperation = 'destination-out';
+    //     await this.ctx.beginPath();
+    //     await this.ctx.arc(x, y, size, 0, 2 * Math.PI, false);
+    //     await this.ctx.fill();
+    //     await this.ctx.restore();
+    // }
 
-export default drawItem
+    async drawIcon() { //아이콘 draw
+        this.pos.x += this.pos.X_Sum
+        this.pos.y += this.pos.Y_Sum
+
+        await this.ctx.drawImage(this.icon, this.pos.x - 20, this.pos.y - 20, 40, 40)
+    }
+
+    bound() {
+        if (this.pos.x <= 20) this.pos.X_Sum *= -1
+        else if (this.pos.x >= canvas.width - 20) this.pos.X_Sum *= -1
+        else if (this.pos.y <= 20) this.pos.Y_Sum *= -1
+        else if (this.pos.y >= canvas.height - 20) this.pos.Y_Sum *= -1
+    }
+    
+    Crash() {
+        if ((store.getState().x + 30 >= this.pos.x && store.getState().x - store.getState().redSize <= this.pos.x) && (this.pos.y <= store.getState().y + 30 && this.pos.y >= store.getState().y - store.getState().redSize)) {
+            store.dispatch(createAction("DELETE_ITEM", {
+                newData: store.getState().itemArr.indexOf(this)
+            }))
+            switch (this.type) {
+                case "shield":
+                    store.dispatch(createAction("UPDATE_SHIELD_TIME", { time: 13000 }))
+                    break;
+                case "speedUp":
+                    store.dispatch(createAction("UPDATE_SPEEDUP_TIME", { time: 13000 }))
+                    store.dispatch(createAction("UPDATE_SPEED", { speed: 9 }))
+                    break;
+                case "slow":
+                    store.dispatch(createAction("UPDATE_SLOW_TIME", { time: 13000 }))
+                    break;
+                default:
+                    break;
+            }
+
+            return true
+        }
+    }
+}
