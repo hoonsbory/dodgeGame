@@ -11,6 +11,7 @@ const UPDATE_SCORE = "UPDATE_SCORE"
 const UPDATE_SHIELD_TIME = "UPDATE_SHIELD_TIME"
 const UPDATE_SPEEDUP_TIME = "UPDATE_SPEEDUP_TIME"
 const UPDATE_SLOW_TIME = "UPDATE_SLOW_TIME"
+const UPDATE_STAR_TIME = "UPDATE_STAR_TIME"
 const UPDATE_SPEED = "UPDATE_SPEED"
 const UPDATEANIMATION = "UPDATEANIMATION"
 const UPDATE_ISEND = "UPDATE_ISEND"
@@ -18,13 +19,44 @@ const UPDATE_ENEMY_UNIT = "UPDATE_ENEMY_UNIT"
 const UPDATE_ENEMY_SPEED = "UPDATE_ENEMY_SPEED"
 const UPDATE_ENEMY_SIZE = "UPDATE_ENEMY_SIZE"
 const UPDATE_REDSIZE = "UPDATE_REDSIZE"
+
+const UPDATE_LEFT = "UPDATE_LEFT"
+const UPDATE_RIGHT = "UPDATE_RIGHT"
+const UPDATE_UP = "UPDATE_UP"
+const UPDATE_DOWN = "UPDATE_DOWN"
+
+
 // Reducer 정의
 function reducer(state, /* action */ { type, payload }) {
 
   switch (type) {
+    case UPDATE_LEFT:
+      return {
+        ...state,
+        left: payload.newData
+      }
+      case UPDATE_RIGHT:
+      return {
+        ...state,
+        right: payload.newData
+      }
+      case UPDATE_UP:
+      return {
+        ...state,
+        up: payload.newData
+      }
+      case UPDATE_DOWN:
+      return {
+        ...state,
+        down: payload.newData
+      }
     case UPDATE_REDSIZE:
-      let redSize = ((window.innerHeight + window.innerWidth) / 2) / 30
+      let redSize;
+      if(!payload.newData){
+      redSize = ((window.innerHeight + window.innerWidth) / 2) / 30
       if (redSize >= 25) redSize = 25
+      }
+      else redSize = payload.newData
       return {
         ...state,
         redSize: redSize
@@ -60,6 +92,11 @@ function reducer(state, /* action */ { type, payload }) {
       return {
         ...state,
         mainSpeed: payload.speed
+      }
+      case UPDATE_STAR_TIME:
+      return {
+        ...state,
+        starTime: state.starTime + payload.time
       }
     case UPDATE_SHIELD_TIME:
       return {

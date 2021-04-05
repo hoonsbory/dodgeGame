@@ -37,9 +37,9 @@ export default class drawItem {
         else if (this.pos.y <= 20) this.pos.Y_Sum *= -1
         else if (this.pos.y >= canvas.height - 20) this.pos.Y_Sum *= -1
     }
-    
+
     Crash() {
-        if ((store.getState().x + 30 >= this.pos.x && store.getState().x - store.getState().redSize <= this.pos.x) && (this.pos.y <= store.getState().y + 30 && this.pos.y >= store.getState().y - store.getState().redSize)) {
+        if ((store.getState().x + store.getState().redSize >= this.pos.x && store.getState().x - 20 <= this.pos.x) && (this.pos.y <= store.getState().y + store.getState().redSize && this.pos.y >= store.getState().y - 20)) {
             store.dispatch(createAction("DELETE_ITEM", {
                 newData: store.getState().itemArr.indexOf(this)
             }))
@@ -52,7 +52,12 @@ export default class drawItem {
                     store.dispatch(createAction("UPDATE_SPEED", { speed: 9 }))
                     break;
                 case "slow":
-                    store.dispatch(createAction("UPDATE_SLOW_TIME", { time: 13000 }))
+                    store.dispatch(createAction("UPDATE_SLOW_TIME", { time: 19000 }))
+                    break;
+                case "star":
+                    store.dispatch(createAction("UPDATE_STAR_TIME", { time: 13000 }))
+                    store.dispatch(createAction("UPDATE_SPEED", { speed: 9 }))
+                    store.dispatch(createAction("UPDATE_REDSIZE", { newData: store.getState().redSize * 2 }))
                     break;
                 default:
                     break;

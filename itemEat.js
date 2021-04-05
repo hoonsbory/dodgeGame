@@ -17,9 +17,14 @@ export default class itemEat {
 
         //스피드 아이템 타이머
         if (store.getState().speedUpTime > 0) store.dispatch(createAction("UPDATE_SPEEDUP_TIME", { time: -50 }))
-        else if (store.getState().mainSpeed != 5) store.dispatch(createAction("UPDATE_SPEED", { speed: 5 })) //타이머 종료 시 스피드 원상복구
+        else if (store.getState().mainSpeed != 5&&store.getState().starTime == 0) store.dispatch(createAction("UPDATE_SPEED", { speed: 5 })) //타이머 종료 시 스피드 원상복구
 
         //슬로우 아이템 타이머
         if (store.getState().slowTime > 0) store.dispatch(createAction("UPDATE_SLOW_TIME", { time: -50 }))
+
+        //무적star 아이템 타이머
+        if (store.getState().starTime > 0) store.dispatch(createAction("UPDATE_STAR_TIME", { time: -50 }))
+        else if(store.getState().redSize >((window.innerHeight + window.innerWidth)/2)/30)
+        store.dispatch(createAction("UPDATE_REDSIZE"))
     }
 }

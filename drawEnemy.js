@@ -42,19 +42,24 @@ export default class drawEnemy {
                     return
                 }
             })
-            if (store.getState().checkMobile) {  //모바일용은 드래그 속도에 따라서 순식간에 범위를 이탈해서 실드 안으로 들어와버리기때문에 따로 실드 안에 사각형을 만들어 처리
+            //모바일용은 드래그 속도에 따라서 순식간에 범위를 이탈해서 실드 안으로 들어와버리기때문에 따로 실드 안에 사각형을 만들어 처리
                 let rectX = pos[52][0]
                 let rectY = pos[52][1]
                 let rectSize = pos[7][0] - pos[22][0]
+                // this.ctx.fillStyle = "blue"
+                // this.ctx.fillRect(rectX,rectY,rectSize,rectSize)
                 if ((rectX + rectSize >= this.enemyPos.x && rectX - store.getState().enemySize <= this.enemyPos.x) && (this.enemyPos.y <= rectY + rectSize && this.enemyPos.y >= rectY - store.getState().enemySize)) {
                     this.deleteEnemy()
                     store.dispatch(createAction("UPDATE_SCORE", { newScore: 100 }))
                     return
                 }
-            }
         } else {
-            if ((x + store.getState().redSize >= this.enemyPos.x && x - store.getState().enemySize <= this.enemyPos.x) && (this.enemyPos.y <= y + store.getState().redSize && this.enemyPos.y >= y - store.getState().enemySize)) { //아이템 미적용시 충돌 처리
+            //아이템 미적용시 충돌 처리
+            if ((x + store.getState().redSize >= this.enemyPos.x && x - store.getState().enemySize <= this.enemyPos.x) && (this.enemyPos.y <= y + store.getState().redSize && this.enemyPos.y >= y - store.getState().enemySize)) { 
                 this.deleteEnemy()
+                if(store.getState().starTime>0)
+                store.dispatch(createAction("UPDATE_SCORE", { newScore: 100 }))
+                else
                 store.dispatch(createAction("UPDATE_ISEND", { newData: true }))
             }
         }

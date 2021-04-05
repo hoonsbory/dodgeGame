@@ -23,6 +23,13 @@ export default class touchEvent {
         let afterX = x + touchX - this.beforeTouchX  
         let afterY = y + touchY - this.beforeTouchY
         
+        if(touchX - this.beforeTouchX >0){
+            store.dispatch((createAction("UPDATE_RIGHT",{newData : true})))
+            store.dispatch((createAction("UPDATE_LEFT",{newData : false})))
+        }else if(touchX - this.beforeTouchX <0){
+            store.dispatch((createAction("UPDATE_RIGHT",{newData : false})))
+            store.dispatch((createAction("UPDATE_LEFT",{newData : true})))
+        }
         //캔버스 밖으로 나갈 시에 못나가게 처리
          if (afterX >= window.innerWidth - 20) afterX = window.innerWidth - 20
          else if (afterX <= 0) afterX = 0

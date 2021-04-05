@@ -3,9 +3,15 @@ let redSize = ((window.innerHeight + window.innerWidth)/2)/30
 if(redSize>=25) redSize = 25
 let enemySize = ((window.innerHeight + window.innerWidth)/2)/60
 if(enemySize>=12) enemySize = 12
+
+
 export function createStore(reducer) {
     // 상태 저장 변수 선언
     let state = {
+        left : false,
+        right : false,
+        up : false,
+        down : false,
         x : window.innerWidth /2,
         y : window.innerHeight /2,
         checkMobile : checkMobile,
@@ -18,6 +24,7 @@ export function createStore(reducer) {
         shieldTime : 0,
         speedUpTime : 0,
         slowTime : 0,
+        starTime : 0,
         animation : '',
         redSize : redSize,
         enemySize : enemySize,

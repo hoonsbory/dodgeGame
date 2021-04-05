@@ -8,11 +8,7 @@ import touchEvent from './touchEvent.js'
 
 export default class App {
     //방향키
-    left
-    right
-    up
-    down
-
+    mouth = false
     constructor() {
         //아이템 아이콘 로드
         this.shieldIcon = new Image()
@@ -21,25 +17,34 @@ export default class App {
         this.speedIcon.src = './speedUp.png'
         this.slowIcon = new Image()
         this.slowIcon.src = './slow.png'
+        this.starIcon = new Image()
+        this.starIcon.src = './star.png'
         this.leftRed = new Image()
         this.leftRed.src = './left.png'
         this.centerRed = new Image()
         this.centerRed.src = './center.png'
         this.rightRed = new Image()
         this.rightRed.src = './right.png'
+        this.leftCloseRed = new Image()
+        this.leftCloseRed.src = './leftClose.png'
+        this.centerCloseRed = new Image()
+        this.centerCloseRed.src = './centerClose.png'
+        this.rightCloseRed = new Image()
+        this.rightCloseRed.src = './rightClose.png'
         this.deadRed = new Image()
         this.deadRed.src = './dead.png'
 
-        this.icon = store.getState().checkMobile ? [this.shieldIcon, this.slowIcon] : [this.shieldIcon, this.speedIcon, this.slowIcon]
+        this.icon = store.getState().checkMobile ? [this.shieldIcon, this.slowIcon, this.starIcon] : [this.shieldIcon, this.speedIcon, this.slowIcon, this.starIcon]
 
         this.canvas = document.getElementById("canvas")
         this.ctx = this.canvas.getContext('2d')
         this.canvas.width = window.innerWidth
         this.canvas.height = window.innerHeight
-        
+
         //키보드 이벤트
         this.keyUp()
         this.keyDown()
+        
 
         //모바일용 터치 이벤트
         if (store.getState().checkMobile) new touchEvent(this.ctx)
@@ -68,8 +73,8 @@ export default class App {
 
     async animate() {
         await this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
-    
-    
+
+
         if (store.getState().isEnd) {  //게임 종료시 
             this.ctx.font = `60px Arial`
             this.ctx.textAlign = "center"
@@ -80,8 +85,8 @@ export default class App {
         }
         else {
             store.dispatch(createAction("UPDATE_SCORE", { newScore: 5 })) //점수 업데이트
-    
-    
+
+
             if (store.getState().score >= 1250 && store.getState().score % 1250 == 0 && store.getState().score < 12501) {
                 let speed = store.getState().enemySpeed
                 if (window.innerWidth + window.innerHeight > 1700)
@@ -89,42 +94,65 @@ export default class App {
                 store.dispatch(createAction("UPDATE_ENEMY_SPEED", { newData: speed }))
                 store.dispatch(createAction("UPDATE_ENEMY_UNIT", { newData: store.getState().enemyUnit - 5 }))
             }
-    
+
             if (store.getState().score % 2000 == 0) { //1000점마다 아이템 생성
-                let random = store.getState().checkMobile ? Math.floor(Math.random() * 2) : Math.floor(Math.random() * 3) //랜덤으로 생성
+                let random = store.getState().checkMobile ? Math.floor(Math.random() * 3) : Math.floor(Math.random() * 4) //랜덤으로 생성
                 let arr = store.getState().itemArr
                 arr.push(new drawItem(this.ctx, this.icon[random]))
-                store.dispatch(createAction("PUSH_ITEM", { newData:  arr})) //객체 푸쉬
+                store.dispatch(createAction("PUSH_ITEM", { newData: arr })) //객체 푸쉬
             }
-    
+
             //enemy 생성
-            if (store.getState().score % store.getState().enemyUnit == 0){
+            if (store.getState().score % store.getState().enemyUnit == 0) {
                 let arr = store.getState().enemyArr
                 arr.push(new drawEnemy(this.ctx))
                 store.dispatch(createAction("PUSH_ENEMY", { newData: arr }))
-            } 
-    
+            }
+
             //아이템먹었을시 효과 적용
             new itemEat(this.ctx)
-    
+
             //캐릭터 이동
-            this.moveRed()
+            if(!store.getState().checkMobile) this.moveRed()
         }
-    
+
+        //무적 효과
+        if (store.getState().starTime > 0 && store.getState().score % 40 == 0) {
+            this.mouth = !this.mouth
+        } else if (store.getState().starTime == 0) this.mouth = false
+
+
         this.ctx.fillStyle = "#FF4848"
         //캐릭터 draw
         let redSize = store.getState().redSize
         // await this.ctx.fillRect(store.getState().x, store.getState().y, redSize, redSize)
-        if(store.getState().isEnd)
-        await this.ctx.drawImage(this.deadRed,store.getState().x,store.getState().y,redSize, redSize)
-        else if(this.left)
-        await this.ctx.drawImage(this.leftRed,store.getState().x,store.getState().y,redSize, redSize)
-        else if(this.right)
-        await this.ctx.drawImage(this.rightRed,store.getState().x,store.getState().y,redSize, redSize)
-        else
-        await this.ctx.drawImage(this.centerRed,store.getState().x,store.getState().y,redSize, redSize)
-        
-    
+        if (!this.mouth) {
+            document.body.style.background = "rgb(255, 202, 236)"
+            if (store.getState().isEnd)
+                await this.ctx.drawImage(this.deadRed, store.getState().x, store.getState().y, redSize, redSize)
+
+            else if (store.getState().left)
+                await this.ctx.drawImage(this.leftRed, store.getState().x, store.getState().y, redSize, redSize)
+
+            else if (store.getState().right)
+                await this.ctx.drawImage(this.rightRed, store.getState().x, store.getState().y, redSize, redSize)
+
+            else
+                await this.ctx.drawImage(this.centerRed, store.getState().x, store.getState().y, redSize, redSize)
+        }
+        else {
+            document.body.style.background = "rgb(255, 150, 150)"
+            if (store.getState().left)
+                await this.ctx.drawImage(this.leftCloseRed, store.getState().x, store.getState().y, redSize, redSize)
+
+            else if (store.getState().right)
+                await this.ctx.drawImage(this.rightCloseRed, store.getState().x, store.getState().y, redSize, redSize)
+
+            else
+                await this.ctx.drawImage(this.centerCloseRed, store.getState().x, store.getState().y, redSize, redSize)
+        }
+
+
         //저장된 적,아이템 객체들 전부 animation 시작
         store.getState().itemArr.forEach(i => {
             i.animate()
@@ -132,24 +160,24 @@ export default class App {
         store.getState().enemyArr.forEach(i => {
             i.animate()
         })
-    
+
         //점수 정보 draw
         drawInfo(this.ctx, this.canvas, store.getState().score)
-    
+
         //animate
         store.dispatch(createAction("UPDATEANIMATION", { newAni: requestAnimationFrame(this.animate.bind(this)) }))
     }
-    
-    
+
+
     updateX(plusMinus) { //x좌표 업데이트
         store.dispatch(createAction("UPDATEX", { newX: store.getState().x + store.getState().mainSpeed * plusMinus }))
     }
     updateY(plusMinus) { //y좌표 업데이트
         store.dispatch(createAction("UPDATEY", { newY: store.getState().y + store.getState().mainSpeed * plusMinus }))
     }
-    
-    
-    
+
+
+
     onclick(e) {
         let mouseX = e.offsetX
         let mouseY = e.offsetY
@@ -157,18 +185,20 @@ export default class App {
             //다시하기 좌표 클릭 시 restart
             store.dispatch(createAction("UPDATE_SPEEDUP_TIME", { time: store.getState().speedUpTime * -1 }))
             store.dispatch(createAction("UPDATE_SLOW_TIME", { time: store.getState().slowTime * -1 }))
+            store.dispatch(createAction("UPDATE_STAR_TIME", { time: store.getState().starTime * -1 }))
+            store.dispatch(createAction("UPDATE_SHIELD_TIME", { time: store.getState().shieldTime * -1 }))
             store.dispatch(createAction("UPDATE_SCORE", { newScore: store.getState().score * -1 }))
             store.dispatch(createAction("UPDATEX", { newX: this.canvas.width / 2 }))
             store.dispatch(createAction("UPDATEY", { newY: this.canvas.height / 2 }))
             store.dispatch(createAction("UPDATE_ISEND", { newData: false }))
             store.dispatch(createAction("UPDATE_ENEMY_SPEED", { newData: 2 }))
             store.dispatch(createAction("UPDATE_ENEMY_UNIT", { newData: window.innerWidth + window.innerHeight > 1700 ? 50 : 60 }))
-            store.dispatch(createAction("PUSH_ITEM", { newData:  []}))
-            store.dispatch(createAction("PUSH_ENEMY", { newData:  []}))
+            store.dispatch(createAction("PUSH_ITEM", { newData: [] }))
+            store.dispatch(createAction("PUSH_ENEMY", { newData: [] }))
             this.canvas.style.cursor = "unset"
         }
     }
-    
+
     onMove(e) { //다시하기 좌표에 마우스 오버될 시 커서 포인트 적용
         let mouseX = e.offsetX
         let mouseY = e.offsetY
@@ -177,44 +207,44 @@ export default class App {
         else
             this.canvas.style.cursor = "unset"
     }
-    
+
     keyUp() {
         onkeyup = (e) => {
             let key = e.keyCode
             switch (key) {
                 case 37:
-                    this.left = false
+                    store.dispatch((createAction("UPDATE_LEFT", { newData: false })))
                     break;
                 case 38:
-                    this.up = false
+                    store.dispatch((createAction("UPDATE_UP", { newData: false })))
                     break;
                 case 39:
-                    this.right = false
+                    store.dispatch((createAction("UPDATE_RIGHT", { newData: false })))
                     break;
                 case 40:
-                    this.down = false
+                    store.dispatch((createAction("UPDATE_DOWN", { newData: false })))
                     break;
                 default:
                     break;
             }
         }
     }
-    
+
     keyDown() {
         onkeydown = (e) => {
             let key = e.keyCode
             switch (key) {
                 case 37:
-                    this.left = true
+                    store.dispatch((createAction("UPDATE_LEFT", { newData: true })))
                     break;
                 case 38:
-                    this.up = true
+                    store.dispatch((createAction("UPDATE_UP", { newData: true })))
                     break;
                 case 39:
-                    this.right = true
+                    store.dispatch((createAction("UPDATE_RIGHT", { newData: true })))
                     break;
                 case 40:
-                    this.down = true
+                    store.dispatch((createAction("UPDATE_DOWN", { newData: true })))
                     break;
                 default:
                     break;
@@ -222,8 +252,8 @@ export default class App {
         }
     }
     moveRed() {
-        if (this.left) {
-            if (this.up) {
+        if (store.getState().left) {
+            if (store.getState().up) {
                 if (store.getState().y <= 0 && store.getState().x <= 0) return
                 else if (store.getState().y <= 0) this.updateX(-1)
                 else if (store.getState().x <= 0) this.updateY(-1)
@@ -232,7 +262,7 @@ export default class App {
                     this.updateY(-1)
                 }
             }
-            else if (this.down) {
+            else if (store.getState().down) {
                 if (store.getState().y >= this.canvas.height - 20 && store.getState().x <= 0) return
                 else if (store.getState().y >= this.canvas.height - 20) this.updateX(-1)
                 else if (store.getState().x <= 0) this.updateY(1)
@@ -247,8 +277,8 @@ export default class App {
                     this.updateX(-1)
             }
         }
-        else if (this.right) {
-            if (this.up) {
+        else if (store.getState().right) {
+            if (store.getState().up) {
                 if (store.getState().y <= 0 && store.getState().x >= this.canvas.width - 20) return
                 else if (store.getState().y <= 0) this.updateX(1)
                 else if (store.getState().x >= this.canvas.width - 20) this.updateY(-1)
@@ -257,7 +287,7 @@ export default class App {
                     this.updateY(-1)
                 }
             }
-            else if (this.down) {
+            else if (store.getState().down) {
                 if (store.getState().y >= this.canvas.height - 20 && store.getState().x >= this.canvas.width - 20) return
                 else if (store.getState().y >= this.canvas.height - 20) this.updateX(1)
                 else if (store.getState().x >= this.canvas.width - 20) this.updateY(1)
@@ -272,13 +302,13 @@ export default class App {
                     this.updateX(1)
             }
         }
-        else if (this.down) {
+        else if (store.getState().down) {
             if (store.getState().y >= this.canvas.height - 20) return
             else this.updateY(1)
         }
-        else if (this.up) {
+        else if (store.getState().up) {
             if (store.getState().y <= 0) return
             else this.updateY(-1)
         }
     }
-    }
+}
