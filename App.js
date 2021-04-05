@@ -82,7 +82,7 @@ export default class App {
                 store.dispatch(createAction("UPDATE_ENEMY_UNIT", { newData: store.getState().enemyUnit - 5 }))
             }
 
-            if (store.getState().score % 1000 == 0) { //1000점마다 아이템 생성
+            if (store.getState().score % 2000 == 0) { //1000점마다 아이템 생성
                 let random = store.getState().checkMobile ? Math.floor(Math.random() * 2) : Math.floor(Math.random() * 3) //랜덤으로 생성
 
                 store.dispatch(createAction("PUSH_ITEM", { newData: new drawItem(this.ctx, this.icon[random]) })) //객체 푸쉬
