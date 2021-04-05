@@ -5,8 +5,7 @@ import getCirclePos from './getCirclePos.js'
 
 
 export default class drawEnemy {
-    constructor(slowCheck, ctx) {
-        this.slowCheck = slowCheck
+    constructor(ctx) {
         this.enemyPos = new randomPos(0) //랜덤 좌표
         this.ctx = ctx
     }

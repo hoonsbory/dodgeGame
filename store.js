@@ -84,7 +84,7 @@ function reducer(state, /* action */ { type, payload }) {
     case PUSH_ENEMY:
       return {
         ...state,
-        enemyArr: state.enemyArr.concat(payload.newData),
+        enemyArr: payload.newData,
       }
     case DELETE_ENEMY:
       if (payload.newData != -1)
@@ -95,7 +95,7 @@ function reducer(state, /* action */ { type, payload }) {
     case PUSH_ITEM:
       return {
         ...state,
-        itemArr: state.itemArr.concat(payload.newData),
+        itemArr: payload.newData,
       }
     case DELETE_ITEM:
       state.itemArr.splice(payload.newData, 1)
