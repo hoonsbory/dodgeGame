@@ -21,6 +21,14 @@ export default class App {
         this.speedIcon.src = './speedUp.png'
         this.slowIcon = new Image()
         this.slowIcon.src = './slow.png'
+        this.leftRed = new Image()
+        this.leftRed.src = './left.png'
+        this.centerRed = new Image()
+        this.centerRed.src = './center.png'
+        this.rightRed = new Image()
+        this.rightRed.src = './right.png'
+        this.deadRed = new Image()
+        this.deadRed.src = './dead.png'
 
         this.icon = store.getState().checkMobile ? [this.shieldIcon, this.slowIcon] : [this.shieldIcon, this.speedIcon, this.slowIcon]
 
@@ -28,7 +36,7 @@ export default class App {
         this.ctx = this.canvas.getContext('2d')
         this.canvas.width = window.innerWidth
         this.canvas.height = window.innerHeight
-
+        
         //키보드 이벤트
         this.keyUp()
         this.keyDown()
@@ -105,7 +113,17 @@ export default class App {
     
         this.ctx.fillStyle = "#FF4848"
         //캐릭터 draw
-        await this.ctx.fillRect(store.getState().x, store.getState().y, store.getState().redSize, store.getState().redSize)
+        let redSize = store.getState().redSize
+        // await this.ctx.fillRect(store.getState().x, store.getState().y, redSize, redSize)
+        if(store.getState().isEnd)
+        await this.ctx.drawImage(this.deadRed,store.getState().x,store.getState().y,redSize, redSize)
+        else if(this.left)
+        await this.ctx.drawImage(this.leftRed,store.getState().x,store.getState().y,redSize, redSize)
+        else if(this.right)
+        await this.ctx.drawImage(this.rightRed,store.getState().x,store.getState().y,redSize, redSize)
+        else
+        await this.ctx.drawImage(this.centerRed,store.getState().x,store.getState().y,redSize, redSize)
+        
     
         //저장된 적,아이템 객체들 전부 animation 시작
         store.getState().itemArr.forEach(i => {

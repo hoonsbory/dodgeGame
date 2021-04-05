@@ -121,7 +121,6 @@ function reducer(state, /* action */ { type, payload }) {
 const store = createStore(reducer);
 // Subscriber 등록
 // store.subscribe(() => {
-//   console.log(store.getState());
 // });
 export default store
 // Dispatch Wrapper 정의
