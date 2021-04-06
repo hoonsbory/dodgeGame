@@ -37,7 +37,7 @@ export default class App {
         this.minimizeIcon = new Image()
         this.minimizeIcon.src = 'img/minimize.png'
 
-        this.icon = store.getState().checkMobile ? [this.shieldIcon, this.slowIcon, this.starIcon,this.minimizeIcon] : [this.shieldIcon, this.speedIcon, this.slowIcon, this.starIcon,this.minimizeIcon]
+        this.icon = store.getState().checkMobile ? [this.shieldIcon, this.slowIcon, this.starIcon, this.minimizeIcon] : [this.shieldIcon, this.speedIcon, this.slowIcon, this.starIcon, this.minimizeIcon]
 
         this.canvas = document.getElementById("canvas")
         this.ctx = this.canvas.getContext('2d')
@@ -47,7 +47,7 @@ export default class App {
         //키보드 이벤트
         this.keyUp()
         this.keyDown()
-        
+
 
         //모바일용 터치 이벤트
         if (store.getState().checkMobile) new touchEvent(this.ctx)
@@ -70,7 +70,7 @@ export default class App {
         })
 
         //animate
-        this.centerRed.onload = () =>{
+        this.centerRed.onload = () => {
             store.dispatch(createAction("UPDATEANIMATION", { newAni: requestAnimationFrame(this.animate.bind(this)) }))
         }
     }
@@ -81,6 +81,10 @@ export default class App {
 
 
         if (store.getState().isEnd) {  //게임 종료시 
+            if (!this.canvas.onclick) {
+                this.canvas.onclick = (e) => this.onclick(e)
+                this.canvas.onmousemove = (e) => this.onMove(e)
+            }
             this.ctx.font = `60px Arial`
             this.ctx.textAlign = "center"
             this.ctx.fillStyle = "black"
@@ -118,7 +122,7 @@ export default class App {
             new itemEat(this.ctx)
 
             //캐릭터 이동
-            if(!store.getState().checkMobile) this.moveRed()
+            if (!store.getState().checkMobile) this.moveRed()
         }
 
         //무적 효과
@@ -201,6 +205,8 @@ export default class App {
             store.dispatch(createAction("PUSH_ITEM", { newData: [] }))
             store.dispatch(createAction("PUSH_ENEMY", { newData: [] }))
             this.canvas.style.cursor = "unset"
+            this.canvas.onmousemove = ""
+            this.canvas.onclick = ''
         }
     }
 
