@@ -23,6 +23,7 @@ export function createStore(reducer) {
         score : 0,
         shieldTime : 0,
         speedUpTime : 0,
+        minimizeTime : 0,
         slowTime : 0,
         starTime : 0,
         animation : '',

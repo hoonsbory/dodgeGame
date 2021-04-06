@@ -26,5 +26,9 @@ export default class itemEat {
         if (store.getState().starTime > 0) store.dispatch(createAction("UPDATE_STAR_TIME", { time: -50 }))
         else if(store.getState().redSize >((window.innerHeight + window.innerWidth)/2)/30)
         store.dispatch(createAction("UPDATE_REDSIZE"))
+
+        if (store.getState().minimizeTime > 0) store.dispatch(createAction("UPDATE_MINIMIZE_TIME", { time: -50 }))
+        else if(store.getState().redSize <((window.innerHeight + window.innerWidth)/2)/30)
+        store.dispatch(createAction("UPDATE_REDSIZE"))
     }
 }

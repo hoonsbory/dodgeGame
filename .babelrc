@@ -1,0 +1,17 @@
+{
+  "presets": [
+    [
+        "@babel/preset-env",
+        {
+            "targets": {
+              "ie": "11"
+            },
+            "debug": true	//빌드될 때 디버깅 하기
+          }
+    ]
+  ],
+  "plugins": [
+    ["@babel/plugin-proposal-decorators",{"decoratorsBeforeExport":true}],
+    ["@babel/plugin-proposal-class-properties"],
+    ["@babel/transform-runtime"]]
+}

@@ -12,29 +12,32 @@ export default class App {
     constructor() {
         //아이템 아이콘 로드
         this.shieldIcon = new Image()
-        this.shieldIcon.src = './shield.png'
+        this.shieldIcon.src = 'img/shield.png'
+        this.shieldIcon.style.transform = "rotate(45deg)"
         this.speedIcon = new Image()
-        this.speedIcon.src = './speedUp.png'
+        this.speedIcon.src = 'img/speedUp.png'
         this.slowIcon = new Image()
-        this.slowIcon.src = './slow.png'
+        this.slowIcon.src = 'img/slow.png'
         this.starIcon = new Image()
-        this.starIcon.src = './star.png'
+        this.starIcon.src = 'img/star.png'
         this.leftRed = new Image()
-        this.leftRed.src = './left.png'
+        this.leftRed.src = 'img/left.png'
         this.centerRed = new Image()
-        this.centerRed.src = './center.png'
+        this.centerRed.src = 'img/center.png'
         this.rightRed = new Image()
-        this.rightRed.src = './right.png'
+        this.rightRed.src = 'img/right.png'
         this.leftCloseRed = new Image()
-        this.leftCloseRed.src = './leftClose.png'
+        this.leftCloseRed.src = 'img/leftClose.png'
         this.centerCloseRed = new Image()
-        this.centerCloseRed.src = './centerClose.png'
+        this.centerCloseRed.src = 'img/centerClose.png'
         this.rightCloseRed = new Image()
-        this.rightCloseRed.src = './rightClose.png'
+        this.rightCloseRed.src = 'img/rightClose.png'
         this.deadRed = new Image()
-        this.deadRed.src = './dead.png'
+        this.deadRed.src = 'img/dead.png'
+        this.minimizeIcon = new Image()
+        this.minimizeIcon.src = 'img/minimize.png'
 
-        this.icon = store.getState().checkMobile ? [this.shieldIcon, this.slowIcon, this.starIcon] : [this.shieldIcon, this.speedIcon, this.slowIcon, this.starIcon]
+        this.icon = store.getState().checkMobile ? [this.shieldIcon, this.slowIcon, this.starIcon,this.minimizeIcon] : [this.shieldIcon, this.speedIcon, this.slowIcon, this.starIcon,this.minimizeIcon]
 
         this.canvas = document.getElementById("canvas")
         this.ctx = this.canvas.getContext('2d')
@@ -96,7 +99,7 @@ export default class App {
             }
 
             if (store.getState().score % 2000 == 0) { //1000점마다 아이템 생성
-                let random = store.getState().checkMobile ? Math.floor(Math.random() * 3) : Math.floor(Math.random() * 4) //랜덤으로 생성
+                let random = store.getState().checkMobile ? Math.floor(Math.random() * 4) : Math.floor(Math.random() * 5) //랜덤으로 생성
                 let arr = store.getState().itemArr
                 arr.push(new drawItem(this.ctx, this.icon[random]))
                 store.dispatch(createAction("PUSH_ITEM", { newData: arr })) //객체 푸쉬

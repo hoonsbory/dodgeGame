@@ -12,6 +12,7 @@ const UPDATE_SHIELD_TIME = "UPDATE_SHIELD_TIME"
 const UPDATE_SPEEDUP_TIME = "UPDATE_SPEEDUP_TIME"
 const UPDATE_SLOW_TIME = "UPDATE_SLOW_TIME"
 const UPDATE_STAR_TIME = "UPDATE_STAR_TIME"
+const UPDATE_MINIMIZE_TIME = "UPDATE_MINIMIZE_TIME"
 const UPDATE_SPEED = "UPDATE_SPEED"
 const UPDATEANIMATION = "UPDATEANIMATION"
 const UPDATE_ISEND = "UPDATE_ISEND"
@@ -102,6 +103,11 @@ function reducer(state, /* action */ { type, payload }) {
       return {
         ...state,
         shieldTime: state.shieldTime + payload.time
+      }
+      case UPDATE_MINIMIZE_TIME:
+      return {
+        ...state,
+        minimizeTime: state.minimizeTime + payload.time
       }
     case UPDATE_SPEEDUP_TIME:
       return {

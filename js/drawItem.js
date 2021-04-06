@@ -59,6 +59,10 @@ export default class drawItem {
                     store.dispatch(createAction("UPDATE_SPEED", { speed: 9 }))
                     store.dispatch(createAction("UPDATE_REDSIZE", { newData: store.getState().redSize * 2 }))
                     break;
+                case "minimize":
+                    store.dispatch(createAction("UPDATE_MINIMIZE_TIME", { time: 13000 }))
+                    store.dispatch(createAction("UPDATE_REDSIZE", { newData: store.getState().redSize / 2 }))
+                    break;
                 default:
                     break;
             }
