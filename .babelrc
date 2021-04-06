@@ -1,13 +1,7 @@
 {
   "presets": [
     [
-        "@babel/preset-env",
-        {
-            "targets": {
-              "ie": "11"
-            },
-            "debug": true	//빌드될 때 디버깅 하기
-          }
+        "@babel/preset-env"
     ]
   ],
   "plugins": [

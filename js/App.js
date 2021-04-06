@@ -13,7 +13,6 @@ export default class App {
         //아이템 아이콘 로드
         this.shieldIcon = new Image()
         this.shieldIcon.src = 'img/shield.png'
-        this.shieldIcon.style.transform = "rotate(45deg)"
         this.speedIcon = new Image()
         this.speedIcon.src = 'img/speedUp.png'
         this.slowIcon = new Image()
@@ -36,19 +35,14 @@ export default class App {
         this.deadRed.src = 'img/dead.png'
         this.minimizeIcon = new Image()
         this.minimizeIcon.src = 'img/minimize.png'
-
         this.icon = store.getState().checkMobile ? [this.shieldIcon, this.slowIcon, this.starIcon, this.minimizeIcon] : [this.shieldIcon, this.speedIcon, this.slowIcon, this.starIcon, this.minimizeIcon]
-
         this.canvas = document.getElementById("canvas")
         this.ctx = this.canvas.getContext('2d')
         this.canvas.width = window.innerWidth
         this.canvas.height = window.innerHeight
-
         //키보드 이벤트
         this.keyUp()
         this.keyDown()
-
-
         //모바일용 터치 이벤트
         if (store.getState().checkMobile) new touchEvent(this.ctx)
 
