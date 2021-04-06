@@ -46,9 +46,6 @@ export default class App {
         //모바일용 터치 이벤트
         if (store.getState().checkMobile) new touchEvent(this.ctx)
 
-        //다시하기 버튼 이벤트
-        this.canvas.onclick = (e) => this.onclick(e)
-        this.canvas.onmousemove = (e) => this.onMove(e)
 
         //리사이즈 이벤트
         window.addEventListener('resize', () => {
