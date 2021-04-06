@@ -30,6 +30,7 @@ export function createStore(reducer) {
         redSize : redSize,
         enemySize : enemySize,
         isEnd : false
+        // aniArr : []
     };
 
     // 구독자 저장 리스트 선언

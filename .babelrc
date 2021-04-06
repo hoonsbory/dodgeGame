@@ -5,7 +5,6 @@
     ]
   ],
   "plugins": [
-    ["@babel/plugin-proposal-decorators",{"decoratorsBeforeExport":true}],
-    ["@babel/plugin-proposal-class-properties"],
-    ["@babel/transform-runtime"]]
+    ["@babel/plugin-proposal-class-properties"]//class를 사용 가능하게
+    ]
 }

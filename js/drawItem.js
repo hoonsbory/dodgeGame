@@ -28,7 +28,7 @@ export default class drawItem {
         this.pos.x += this.pos.X_Sum
         this.pos.y += this.pos.Y_Sum
 
-        await this.ctx.drawImage(this.icon, this.pos.x - 20, this.pos.y - 20, 40, 40)
+        await this.ctx.drawImage(this.icon, this.pos.x, this.pos.y, 40, 40)
     }
 
     bound() {
@@ -39,7 +39,7 @@ export default class drawItem {
     }
 
     Crash() {
-        if ((store.getState().x + store.getState().redSize >= this.pos.x && store.getState().x - 20 <= this.pos.x) && (this.pos.y <= store.getState().y + store.getState().redSize && this.pos.y >= store.getState().y - 20)) {
+        if ((store.getState().x + store.getState().redSize >= this.pos.x && store.getState().x - 40 <= this.pos.x) && (this.pos.y <= store.getState().y + store.getState().redSize && this.pos.y >= store.getState().y - 40)) {
             store.dispatch(createAction("DELETE_ITEM", {
                 newData: store.getState().itemArr.indexOf(this)
             }))

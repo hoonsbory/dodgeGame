@@ -62,7 +62,8 @@ var config = {
     ],
     devServer: {
         contentBase: './', //base 디렉토리
-        host: 'localhost',
+        host: '0.0.0.0',
+        public : 'localhost:3000',
         port: 3000,
         open: true,
         hot: true,

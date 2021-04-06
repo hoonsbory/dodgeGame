@@ -90,7 +90,7 @@ export default class App {
             store.dispatch(createAction("UPDATE_SCORE", { newScore: 5 })) //점수 업데이트
 
 
-            if (store.getState().score >= 1250 && store.getState().score % 1250 == 0 && store.getState().score < 12501) {
+            if (store.getState().score >= 1250 && store.getState().score % 1250 == 0 && store.getState().score < 11251) {
                 let speed = store.getState().enemySpeed
                 if (window.innerWidth + window.innerHeight > 1700)
                     speed = speed < 6 ? speed + 1 : speed
@@ -190,6 +190,7 @@ export default class App {
             store.dispatch(createAction("UPDATE_SLOW_TIME", { time: store.getState().slowTime * -1 }))
             store.dispatch(createAction("UPDATE_STAR_TIME", { time: store.getState().starTime * -1 }))
             store.dispatch(createAction("UPDATE_SHIELD_TIME", { time: store.getState().shieldTime * -1 }))
+            store.dispatch(createAction("UPDATE_MINIMIZE_TIME", { time: store.getState().minimizeTime * -1 }))
             store.dispatch(createAction("UPDATE_SCORE", { newScore: store.getState().score * -1 }))
             store.dispatch(createAction("UPDATEX", { newX: this.canvas.width / 2 }))
             store.dispatch(createAction("UPDATEY", { newY: this.canvas.height / 2 }))
