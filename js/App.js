@@ -70,7 +70,9 @@ export default class App {
         })
 
         //animate
-        store.dispatch(createAction("UPDATEANIMATION", { newAni: requestAnimationFrame(this.animate.bind(this)) }))
+        this.centerRed.onload = () =>{
+            store.dispatch(createAction("UPDATEANIMATION", { newAni: requestAnimationFrame(this.animate.bind(this)) }))
+        }
     }
 
 
