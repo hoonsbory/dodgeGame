@@ -203,8 +203,8 @@ export default class App {
             store.dispatch(createAction("UPDATE_SHIELD_STACK", { stack: 0 }))
             store.dispatch(createAction("UPDATE_MINIMIZE_TIME", { time: store.getState().minimizeTime * -1 }))
             store.dispatch(createAction("UPDATE_SCORE", { newScore: store.getState().score * -1 }))
-            store.dispatch(createAction("UPDATEX", { newX: this.canvas.width / 2 }))
-            store.dispatch(createAction("UPDATEY", { newY: this.canvas.height / 2 }))
+            store.dispatch(createAction("UPDATEX", { newX: window.innerWidth / 2 }))
+            store.dispatch(createAction("UPDATEY", { newY: window.innerHeight / 2 }))
             store.dispatch(createAction("UPDATE_ISEND", { newData: false }))
             store.dispatch(createAction("UPDATE_ENEMY_SPEED", { newData: 2 }))
             store.dispatch(createAction("UPDATE_ENEMY_UNIT", { newData: window.innerWidth + window.innerHeight > 1700 ? 50 : 60 }))
@@ -248,7 +248,6 @@ export default class App {
     keyDown() {
         onkeydown = (e) => {
             let key = e.keyCode
-            console.log(key)
             if(store.getState().isEnd&&key==32){
                 this.restart()
                 return
@@ -323,6 +322,7 @@ export default class App {
             }
         }
         else if (store.getState().down) {
+            console.log(store.getState().redSize)
             if (store.getState().y >= this.canvas.height - store.getState().redSize) return
             else this.updateY(1)
         }
