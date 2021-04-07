@@ -283,8 +283,8 @@ export default class App {
                 }
             }
             else if (store.getState().down) {
-                if (store.getState().y >= this.canvas.height - 20 && store.getState().x <= 0) return
-                else if (store.getState().y >= this.canvas.height - 20) this.updateX(-1)
+                if (store.getState().y >= this.canvas.height - store.getState().redSize && store.getState().x <= 0) return
+                else if (store.getState().y >= this.canvas.height - store.getState().redSize) this.updateX(-1)
                 else if (store.getState().x <= 0) this.updateY(1)
                 else {
                     this.updateX(-1)
@@ -299,31 +299,31 @@ export default class App {
         }
         else if (store.getState().right) {
             if (store.getState().up) {
-                if (store.getState().y <= 0 && store.getState().x >= this.canvas.width - 20) return
+                if (store.getState().y <= 0 && store.getState().x >= this.canvas.width - store.getState().redSize) return
                 else if (store.getState().y <= 0) this.updateX(1)
-                else if (store.getState().x >= this.canvas.width - 20) this.updateY(-1)
+                else if (store.getState().x >= this.canvas.width - store.getState().redSize) this.updateY(-1)
                 else {
                     this.updateX(1)
                     this.updateY(-1)
                 }
             }
             else if (store.getState().down) {
-                if (store.getState().y >= this.canvas.height - 20 && store.getState().x >= this.canvas.width - 20) return
-                else if (store.getState().y >= this.canvas.height - 20) this.updateX(1)
-                else if (store.getState().x >= this.canvas.width - 20) this.updateY(1)
+                if (store.getState().y >= this.canvas.height - store.getState().redSize && store.getState().x >= this.canvas.width - store.getState().redSize) return
+                else if (store.getState().y >= this.canvas.height - store.getState().redSize) this.updateX(1)
+                else if (store.getState().x >= this.canvas.width - store.getState().redSize) this.updateY(1)
                 else {
                     this.updateX(1)
                     this.updateY(1)
                 }
             }
             else {
-                if (store.getState().x >= this.canvas.width - 20) return
+                if (store.getState().x >= this.canvas.width - store.getState().redSize) return
                 else
                     this.updateX(1)
             }
         }
         else if (store.getState().down) {
-            if (store.getState().y >= this.canvas.height - 20) return
+            if (store.getState().y >= this.canvas.height - store.getState().redSize) return
             else this.updateY(1)
         }
         else if (store.getState().up) {
