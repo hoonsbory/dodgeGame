@@ -13,6 +13,7 @@ body{
     height: 100%;
     overflow: hidden;
     background: rgb(255, 202, 236);
+    transition: all .5s ease;
 }
 canvas{
     position: absolute;
