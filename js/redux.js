@@ -21,7 +21,7 @@ export function createStore(reducer) {
         itemArr : [],
         enemyUnit : window.innerWidth + window.innerHeight>1700 ? 50 : 60,
         score : 0,
-        shieldTime : 0,
+        shieldStack : 0,
         speedUpTime : 0,
         minimizeTime : 0,
         slowTime : 0,

@@ -45,7 +45,7 @@ export default class drawItem {
             }))
             switch (this.type) {
                 case "shield":
-                    store.dispatch(createAction("UPDATE_SHIELD_TIME", { time: 13000 }))
+                    store.dispatch(createAction("UPDATE_SHIELD_STACK", { stack: 3 }))
                     break;
                 case "speedUp":
                     store.dispatch(createAction("UPDATE_SPEEDUP_TIME", { time: 13000 }))

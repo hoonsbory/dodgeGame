@@ -8,7 +8,7 @@ const DELETE_ITEM = "DELETE_ITEM"
 const UPDATEX = "UPDATEX"
 const UPDATEY = "UPDATEY"
 const UPDATE_SCORE = "UPDATE_SCORE"
-const UPDATE_SHIELD_TIME = "UPDATE_SHIELD_TIME"
+const UPDATE_SHIELD_STACK = "UPDATE_SHIELD_STACK"
 const UPDATE_SPEEDUP_TIME = "UPDATE_SPEEDUP_TIME"
 const UPDATE_SLOW_TIME = "UPDATE_SLOW_TIME"
 const UPDATE_STAR_TIME = "UPDATE_STAR_TIME"
@@ -99,10 +99,10 @@ function reducer(state, /* action */ { type, payload }) {
         ...state,
         starTime: state.starTime + payload.time
       }
-    case UPDATE_SHIELD_TIME:
+    case UPDATE_SHIELD_STACK:
       return {
         ...state,
-        shieldTime: state.shieldTime + payload.time
+        shieldStack: payload.stack
       }
       case UPDATE_MINIMIZE_TIME:
       return {

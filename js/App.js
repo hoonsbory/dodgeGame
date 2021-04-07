@@ -35,7 +35,14 @@ export default class App {
         this.deadRed.src = 'img/dead.png'
         this.minimizeIcon = new Image()
         this.minimizeIcon.src = 'img/minimize.png'
-        this.icon = store.getState().checkMobile ? [this.shieldIcon, this.slowIcon, this.starIcon, this.minimizeIcon] : [this.shieldIcon, this.speedIcon, this.slowIcon, this.starIcon, this.minimizeIcon]
+        this.stoneRed = new Image()
+        this.stoneRed.src = 'img/stone.png'
+        this.stoneCrash1 = new Image()
+        this.stoneCrash1.src = 'img/stoneCrash1.png'
+        this.stoneCrash2 = new Image()
+        this.stoneCrash2.src = 'img/stoneCrash2.png'
+        this.stoneArr = [this.stoneCrash2,this.stoneCrash1,this.stoneRed]
+        this.icon = store.getState().checkMobile ? [this.shieldIcon, this.slowIcon, this.starIcon, this.minimizeIcon] : [this.shieldIcon,this.starIcon, this.minimizeIcon, this.speedIcon, this.slowIcon]
         this.canvas = document.getElementById("canvas")
         this.ctx = this.canvas.getContext('2d')
         this.canvas.width = window.innerWidth
@@ -95,8 +102,8 @@ export default class App {
                 store.dispatch(createAction("UPDATE_ENEMY_UNIT", { newData: store.getState().enemyUnit - 5 }))
             }
 
-            if (store.getState().score % 2000 == 0) { //1000점마다 아이템 생성
-                let random = store.getState().checkMobile ? Math.floor(Math.random() * 4) : Math.floor(Math.random() * 5) //랜덤으로 생성
+            if (store.getState().score % 1000 == 0) { //1000점마다 아이템 생성
+                let random = store.getState().checkMobile ? Math.floor(Math.random() * 4) : Math.floor(Math.random() * 3) //랜덤으로 생성
                 let arr = store.getState().itemArr
                 arr.push(new drawItem(this.ctx, this.icon[random]))
                 store.dispatch(createAction("PUSH_ITEM", { newData: arr })) //객체 푸쉬
@@ -125,10 +132,11 @@ export default class App {
         this.ctx.fillStyle = "#FF4848"
         //캐릭터 draw
         let redSize = store.getState().redSize
-        // await this.ctx.fillRect(store.getState().x, store.getState().y, redSize, redSize)
         if (!this.mouth) {
             document.body.style.background = "rgb(255, 202, 236)"
-            if (store.getState().isEnd)
+            if(store.getState().shieldStack >0)
+            await this.ctx.drawImage(this.stoneArr[store.getState().shieldStack-1], store.getState().x, store.getState().y, redSize, redSize)
+            else if (store.getState().isEnd)
                 await this.ctx.drawImage(this.deadRed, store.getState().x, store.getState().y, redSize, redSize)
 
             else if (store.getState().left)
@@ -142,7 +150,9 @@ export default class App {
         }
         else {
             document.body.style.background = "rgb(255, 150, 150)"
-            if (store.getState().left)
+            if(store.getState().shieldStack >0)
+            await this.ctx.drawImage(this.stoneArr[store.getState().shieldStack-1], store.getState().x, store.getState().y, redSize, redSize)
+            else if (store.getState().left)
                 await this.ctx.drawImage(this.leftCloseRed, store.getState().x, store.getState().y, redSize, redSize)
 
             else if (store.getState().right)
@@ -186,7 +196,7 @@ export default class App {
             store.dispatch(createAction("UPDATE_SPEEDUP_TIME", { time: store.getState().speedUpTime * -1 }))
             store.dispatch(createAction("UPDATE_SLOW_TIME", { time: store.getState().slowTime * -1 }))
             store.dispatch(createAction("UPDATE_STAR_TIME", { time: store.getState().starTime * -1 }))
-            store.dispatch(createAction("UPDATE_SHIELD_TIME", { time: store.getState().shieldTime * -1 }))
+            store.dispatch(createAction("UPDATE_SHIELD_STACK", { stack: 0 }))
             store.dispatch(createAction("UPDATE_MINIMIZE_TIME", { time: store.getState().minimizeTime * -1 }))
             store.dispatch(createAction("UPDATE_SCORE", { newScore: store.getState().score * -1 }))
             store.dispatch(createAction("UPDATEX", { newX: this.canvas.width / 2 }))
