@@ -6,7 +6,7 @@ export default class drawItem {
     constructor(ctx, icon) {
         this.ctx = ctx
         this.icon = icon
-        this.pos = new randomPos(80)
+        this.pos = new randomPos(100)
         this.type = icon.src.substring(icon.src.lastIndexOf("/") + 1, icon.src.indexOf(".png")) //아이템 타입 
     }
     async animate() {
@@ -32,10 +32,10 @@ export default class drawItem {
     }
 
     bound() {
-        if (this.pos.x <= 20) this.pos.X_Sum *= -1
-        else if (this.pos.x >= canvas.width - 20) this.pos.X_Sum *= -1
-        else if (this.pos.y <= 20) this.pos.Y_Sum *= -1
-        else if (this.pos.y >= canvas.height - 20) this.pos.Y_Sum *= -1
+        if (this.pos.x <= 0) this.pos.X_Sum *= -1
+        else if (this.pos.x >= canvas.width - 40) this.pos.X_Sum *= -1
+        else if (this.pos.y <= 0) this.pos.Y_Sum *= -1
+        else if (this.pos.y >= canvas.height - 40) this.pos.Y_Sum *= -1
     }
 
     Crash() {

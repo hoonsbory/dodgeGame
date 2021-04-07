@@ -54,20 +54,20 @@ export default class drawEnemy {
         //         return
         //     }
         // } else {
-            //아이템 미적용시 충돌 처리
-            if ((x + store.getState().redSize >= this.enemyPos.x && x - store.getState().enemySize <= this.enemyPos.x) && (this.enemyPos.y <= y + store.getState().redSize && this.enemyPos.y >= y - store.getState().enemySize)) {
-                this.deleteEnemy()
-                if (store.getState().starTime > 0)
-                    store.dispatch(createAction("UPDATE_SCORE", { newScore: 100 }))
-                else {
-                    if (store.getState().shieldStack > 0){
-                        this.shieldEffect()
-                    } 
-                    else
-                        store.dispatch(createAction("UPDATE_ISEND", { newData: true }))
+        //아이템 미적용시 충돌 처리
+        if ((x + store.getState().redSize >= this.enemyPos.x && x - store.getState().enemySize <= this.enemyPos.x) && (this.enemyPos.y <= y + store.getState().redSize && this.enemyPos.y >= y - store.getState().enemySize)) {
+            this.deleteEnemy()
+            if (store.getState().starTime > 0)
+                store.dispatch(createAction("UPDATE_SCORE", { newScore: 100 }))
+            else {
+                if (store.getState().shieldStack > 0) {
+                    this.shieldEffect()
                 }
+                else
+                    store.dispatch(createAction("UPDATE_ISEND", { newData: true }))
             }
         }
+    }
     // }
 
     isOut() {
@@ -81,6 +81,7 @@ export default class drawEnemy {
     }
     shieldEffect() {
         store.dispatch(createAction("UPDATE_SHIELD_STACK", { stack: store.getState().shieldStack - 1 }))
+        if(store.getState().checkMobile) return
         canvas.style.left = "10px";
         setTimeout(() => {
             canvas.style.top = "10px";

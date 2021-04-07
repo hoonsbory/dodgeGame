@@ -44,7 +44,7 @@ export function createStore(reducer) {
     // 출판 함수
     const publish = () => {
         listeners.forEach((subscriber) => {
-            subscriber()
+            subscriber(state.shieldStack)
         });
     };
 
