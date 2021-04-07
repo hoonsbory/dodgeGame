@@ -193,7 +193,11 @@ export default class App {
         let mouseY = e.offsetY
         if ((mouseX > this.canvas.width / 2 - 70 && mouseX < this.canvas.width / 2 + 70) && (mouseY > this.canvas.height / 2 + 40 && mouseY < this.canvas.height / 2 + 80)) {
             //다시하기 좌표 클릭 시 restart
-            store.dispatch(createAction("UPDATE_SPEEDUP_TIME", { time: store.getState().speedUpTime * -1 }))
+            this.restart()
+        }
+    }
+    restart(){
+        store.dispatch(createAction("UPDATE_SPEEDUP_TIME", { time: store.getState().speedUpTime * -1 }))
             store.dispatch(createAction("UPDATE_SLOW_TIME", { time: store.getState().slowTime * -1 }))
             store.dispatch(createAction("UPDATE_STAR_TIME", { time: store.getState().starTime * -1 }))
             store.dispatch(createAction("UPDATE_SHIELD_STACK", { stack: 0 }))
@@ -209,9 +213,7 @@ export default class App {
             this.canvas.style.cursor = "unset"
             this.canvas.onmousemove = ""
             this.canvas.onclick = ''
-        }
     }
-
     onMove(e) { //다시하기 좌표에 마우스 오버될 시 커서 포인트 적용
         let mouseX = e.offsetX
         let mouseY = e.offsetY
@@ -246,6 +248,11 @@ export default class App {
     keyDown() {
         onkeydown = (e) => {
             let key = e.keyCode
+            console.log(key)
+            if(store.getState().isEnd&&key==32){
+                this.restart()
+                return
+            } 
             switch (key) {
                 case 37:
                     store.dispatch((createAction("UPDATE_LEFT", { newData: true })))
