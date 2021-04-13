@@ -11,38 +11,10 @@ export default class App {
     mouth = false
     constructor() {
         //아이템 아이콘 로드
-        this.shieldIcon = new Image()
-        this.shieldIcon.src = 'img/shield.png'
-        this.speedIcon = new Image()
-        this.speedIcon.src = 'img/speedUp.png'
-        this.slowIcon = new Image()
-        this.slowIcon.src = 'img/slow.png'
-        this.starIcon = new Image()
-        this.starIcon.src = 'img/star.png'
-        this.leftRed = new Image()
-        this.leftRed.src = 'img/left.png'
-        this.centerRed = new Image()
-        this.centerRed.src = 'img/center.png'
-        this.rightRed = new Image()
-        this.rightRed.src = 'img/right.png'
-        this.leftCloseRed = new Image()
-        this.leftCloseRed.src = 'img/leftClose.png'
-        this.centerCloseRed = new Image()
-        this.centerCloseRed.src = 'img/centerClose.png'
-        this.rightCloseRed = new Image()
-        this.rightCloseRed.src = 'img/rightClose.png'
-        this.deadRed = new Image()
-        this.deadRed.src = 'img/dead.png'
-        this.minimizeIcon = new Image()
-        this.minimizeIcon.src = 'img/minimize.png'
-        this.stoneRed = new Image()
-        this.stoneRed.src = 'img/stone.png'
-        this.stoneCrash1 = new Image()
-        this.stoneCrash1.src = 'img/stoneCrash1.png'
-        this.stoneCrash2 = new Image()
-        this.stoneCrash2.src = 'img/stoneCrash2.png'
+        this.image = new Image()
+        this.image.src = 'img/image.png'
         this.stoneArr = [this.stoneCrash2,this.stoneCrash1,this.stoneRed]
-        this.icon = store.getState().checkMobile ? [this.shieldIcon, this.slowIcon, this.starIcon, this.minimizeIcon] : [this.shieldIcon,this.starIcon, this.minimizeIcon, this.speedIcon, this.slowIcon]
+        this.icon = store.getState().checkMobile ? ['shield','slow','star','minimize'] : ['shield','slow','star','minimize','speed']
         this.canvas = document.getElementById("canvas")
         this.ctx = this.canvas.getContext('2d')
         this.canvas.width = window.innerWidth
@@ -52,7 +24,6 @@ export default class App {
         this.keyDown()
         //모바일용 터치 이벤트
         if (store.getState().checkMobile) new touchEvent(this.ctx)
-
 
         //리사이즈 이벤트
         window.addEventListener('resize', () => {
@@ -68,7 +39,7 @@ export default class App {
         })
 
         //animate
-        this.centerRed.onload = () => {
+        this.image.onload = () => {
             store.dispatch(createAction("UPDATEANIMATION", { newAni: requestAnimationFrame(this.animate.bind(this)) }))
         }
     }
@@ -103,9 +74,9 @@ export default class App {
             }
 
             if (store.getState().score % 2000 == 0) { //1000점마다 아이템 생성
-                let random = store.getState().checkMobile ? Math.floor(Math.random() * 4) : Math.floor(Math.random() * 3) //랜덤으로 생성
+                let random = store.getState().checkMobile ? Math.floor(Math.random() * 4) : Math.floor(Math.random() * 5) //랜덤으로 생성
                 let arr = store.getState().itemArr
-                arr.push(new drawItem(this.ctx, this.icon[random]))
+                arr.push(new drawItem(this.ctx,this.image, 2955 + (random * 295), this.icon[random]))
                 store.dispatch(createAction("PUSH_ITEM", { newData: arr })) //객체 푸쉬
             }
 
@@ -135,31 +106,31 @@ export default class App {
         if (!this.mouth) {
             document.body.style.background = "rgb(255, 202, 236)"
             if(store.getState().shieldStack >0)
-            await this.ctx.drawImage(this.stoneArr[store.getState().shieldStack-1], store.getState().x, store.getState().y, redSize, redSize)
+            await this.ctx.drawImage(this.image,(1770 + (295 * (store.getState().shieldStack-1))),0,295,295, store.getState().x, store.getState().y, redSize, redSize)
             else if (store.getState().isEnd)
-                await this.ctx.drawImage(this.deadRed, store.getState().x, store.getState().y, redSize, redSize)
+                await this.ctx.drawImage(this.image,2655,0,295,295, store.getState().x, store.getState().y, redSize, redSize)
 
             else if (store.getState().left)
-                await this.ctx.drawImage(this.leftRed, store.getState().x, store.getState().y, redSize, redSize)
+                await this.ctx.drawImage(this.image,590,0,295,295, store.getState().x, store.getState().y, redSize, redSize)
 
             else if (store.getState().right)
-                await this.ctx.drawImage(this.rightRed, store.getState().x, store.getState().y, redSize, redSize)
+                await this.ctx.drawImage(this.image,1180,0,295,295, store.getState().x, store.getState().y, redSize, redSize)
 
             else
-                await this.ctx.drawImage(this.centerRed, store.getState().x, store.getState().y, redSize, redSize)
+                await this.ctx.drawImage(this.image,295,0,295,295, store.getState().x, store.getState().y, redSize, redSize)
         }
         else {
             document.body.style.background = "rgb(255, 150, 150)"
             if(store.getState().shieldStack >0)
-            await this.ctx.drawImage(this.stoneArr[store.getState().shieldStack-1], store.getState().x, store.getState().y, redSize, redSize)
+            await this.ctx.drawImage(this.image,(1770 + (295 * (store.getState().shieldStack-1))),0,295,295, store.getState().x, store.getState().y, redSize, redSize)
             else if (store.getState().left)
-                await this.ctx.drawImage(this.leftCloseRed, store.getState().x, store.getState().y, redSize, redSize)
+            await this.ctx.drawImage(this.image,885,0,295,295, store.getState().x, store.getState().y, redSize, redSize)
 
             else if (store.getState().right)
-                await this.ctx.drawImage(this.rightCloseRed, store.getState().x, store.getState().y, redSize, redSize)
+            await this.ctx.drawImage(this.image,1475,0,295,295, store.getState().x, store.getState().y, redSize, redSize)
 
             else
-                await this.ctx.drawImage(this.centerCloseRed, store.getState().x, store.getState().y, redSize, redSize)
+            await this.ctx.drawImage(this.image,0,0,295,295, store.getState().x, store.getState().y, redSize, redSize)
         }
 
 
@@ -322,7 +293,6 @@ export default class App {
             }
         }
         else if (store.getState().down) {
-            console.log(store.getState().redSize)
             if (store.getState().y >= this.canvas.height - store.getState().redSize) return
             else this.updateY(1)
         }

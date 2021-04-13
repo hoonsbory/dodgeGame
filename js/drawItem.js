@@ -3,11 +3,12 @@ import { createAction } from './redux.js'
 import store from './store.js'
 
 export default class drawItem {
-    constructor(ctx, icon) {
+    constructor(ctx, image,imageX,icon) {
         this.ctx = ctx
         this.icon = icon
+        this.image = image
+        this.imageX = imageX
         this.pos = new randomPos(100)
-        this.type = icon.src.substring(icon.src.lastIndexOf("/") + 1, icon.src.indexOf(".png")) //아이템 타입 
     }
     async animate() {
         await this.drawIcon()
@@ -28,7 +29,7 @@ export default class drawItem {
         this.pos.x += this.pos.X_Sum
         this.pos.y += this.pos.Y_Sum
 
-        await this.ctx.drawImage(this.icon, this.pos.x, this.pos.y, 40, 40)
+        await this.ctx.drawImage(this.image,this.imageX,0,295,295,this.pos.x, this.pos.y, 40, 40)
     }
 
     bound() {
@@ -43,11 +44,11 @@ export default class drawItem {
             store.dispatch(createAction("DELETE_ITEM", {
                 newData: store.getState().itemArr.indexOf(this)
             }))
-            switch (this.type) {
+            switch (this.icon) {
                 case "shield":
                     store.dispatch(createAction("UPDATE_SHIELD_STACK", { stack: 3 }))
                     break;
-                case "speedUp":
+                case "speed":
                     store.dispatch(createAction("UPDATE_SPEEDUP_TIME", { time: 13000 }))
                     store.dispatch(createAction("UPDATE_SPEED", { speed: 9 }))
                     break;
